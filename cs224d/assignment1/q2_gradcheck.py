@@ -13,7 +13,7 @@ def gradcheck_naive(f, x):
     random.setstate(rndstate)  
     fx, grad = f(x) # Evaluate function value at original point
     h = 1e-4
-    fx_new,_ = f(x+h)
+    
     # Iterate over all indexes in x
     it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
     while not it.finished:
@@ -23,8 +23,25 @@ def gradcheck_naive(f, x):
         ### make sure you call random.setstate(rndstate) before calling f(x) each time, this will make it 
         ### possible to test cost functions with built in randomness later
         ### YOUR CODE HERE:
-        numgrad = (fx_new[ix] - fx[ix]) / h
         
+        # Use the centered difference formula to check the gradient
+        # For more specific details, please check the link https://cs231n.github.io/optimization-1/#numerical
+        
+        temp_x = x.astype('float64')
+        # ix is the index in x
+        temp_x[ix] += h
+
+        # the function of random.setstate(rndstate) is keep random the same. Because everytime
+        # you calculate f(temp_x) , it has some relation with random -check line 67,68
+        random.setstate(rndstate) 
+        after,_ = f(temp_x)
+        temp_x[ix] -= 2*h
+        random.setstate(rndstate) 
+        before,_ = f(temp_x)
+
+        numgrad = (after - before) / (2*h)
+
+
         ### END YOUR CODE
 
         # Compare gradients
