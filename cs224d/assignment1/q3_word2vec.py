@@ -10,7 +10,13 @@ def normalizeRows(x):
     # Implement a function that normalizes each row of a matrix to have unit length
     
     ### YOUR CODE HERE
-    raise NotImplementedError
+    
+    # unit length means every row vector has the same length which means
+    # the square sum of every number in the every row vector should be same
+
+    x /= np.sqrt(np.sum(np.square(x),axis=1,keepdims=True))
+
+
     ### END YOUR CODE
     
     return x
@@ -50,7 +56,10 @@ def softmaxCostAndGradient(predicted, target, outputVectors, dataset):
     # assignment!                                                  
     
     ### YOUR CODE HERE
-    raise NotImplementedError
+
+    # OutputVectors works like U between the hidden and Output
+    # And the predicted is like the output of hidden_layer
+    
     ### END YOUR CODE
     
     return cost, gradPred, grad
