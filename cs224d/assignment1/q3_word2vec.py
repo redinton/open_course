@@ -57,8 +57,22 @@ def softmaxCostAndGradient(predicted, target, outputVectors, dataset):
     
     ### YOUR CODE HERE
 
-    # OutputVectors works like U between the hidden and Output
-    # And the predicted is like the output of hidden_layer
+    # predicted works like v_head 
+
+    v_hat = predicted
+    z = np.dot(outputVectors,v_hat)
+    scores = softmax(z)
+
+    z = v_hat.copy()
+    z[target] -= 1.0
+
+    cost = -np.log(scores[target])
+
+    gradPred = np.dot(outputVectors.T,z)
+    
+    grad = np.outer(z,v_hat)
+
+
     
     ### END YOUR CODE
     
