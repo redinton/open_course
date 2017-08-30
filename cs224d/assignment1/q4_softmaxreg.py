@@ -23,7 +23,11 @@ def getSentenceFeature(tokens, wordVectors, sentence):
     sentVector = np.zeros((wordVectors.shape[1],))
     
     ### YOUR CODE HERE
-    raise NotImplementedError
+    for i in sentence:
+        word_ix = tokens[i]
+        sentVector += wordVectors[word_ix]
+    sentVector /= len(sentence)
+    
     ### END YOUR CODE
     
     return sentVector
@@ -55,7 +59,13 @@ def softmaxRegression(features, labels, weights, regularization = 0.0, nopredict
     cost += 0.5 * regularization * np.sum(weights ** 2)
     
     ### YOUR CODE HERE: compute the gradients and predictions
-    raise NotImplementedError
+
+    labels_onehot = np.zeros_like(prob)
+    labels_onehot[range(N), labels] = 1.0
+    grad = 1.0 / N * np.dot(features.T, prob - labels_onehot) + regularization * weights
+    
+    pred = np.argmax(prob,axis = len(prob.shape)-1)
+
     ### END YOUR CODE
     
     if nopredictions:
