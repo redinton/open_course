@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+
 def softmax(x):
     """
     Compute the softmax function for each row of the input x.

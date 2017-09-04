@@ -1,3 +1,4 @@
+#coding:utf-8
 import numpy as np
 import tensorflow as tf
 from utils.general_utils import test_all_close
@@ -7,12 +8,12 @@ def softmax(x):
     """
     Compute the softmax function in tensorflow.
 
-    You might find the tensorflow functions tf.exp, tf.reduce_max,
-    tf.reduce_sum, tf.expand_dims useful. (Many solutions are possible, so you may
-    not need to use all of these functions). Recall also that many common
-    tensorflow operations are sugared (e.g. x * y does a tensor multiplication
-    if x and y are both tensors). Make sure to implement the numerical stability
-    fixes as in the previous homework!
+    You might find the tensorflow functions 
+    tf.exp, tf.reduce_max,tf.reduce_sum, tf.expand_dims useful. 
+    (Many solutions are possible, so you maynot need to use all of these functions). 
+    Recall also that many common tensorflow operations are sugared 
+    (e.g. x * y does a tensor multiplication if x and y are both tensors). 
+    Make sure to implement the numerical stability fixes as in the previous homework!
 
     Args:
         x:   tf.Tensor with shape (n_samples, n_features). Note feature vectors are
@@ -24,6 +25,12 @@ def softmax(x):
     """
 
     ### YOUR CODE HERE
+    # tf.reduce_sum 就是对按照axis的方向上求和,axis = 0意味着行
+    x_max = tf.reduce_max(x,1,keep_dims=True)          
+    x_sub = tf.subtract(x,x_max)                       # subtract maximums in case of too large number for       
+    x_exp = tf.exp(x_sub)                              # exponential calculation
+    sum_exp = tf.reduce_sum(x_exp,axis=1,keep_dims=True)    
+    out = tf.div(x_exp,sum_exp)                        
     ### END YOUR CODE
 
     return out
@@ -46,15 +53,20 @@ def cross_entropy_loss(y, yhat):
 
     Args:
         y:    tf.Tensor with shape (n_samples, n_classes). One-hot encoded.
-        yhat: tf.Tensorwith shape (n_sample, n_classes). Each row encodes a
+        yhat: tf.Tensor with shape (n_sample, n_classes). Each row encodes a
                     probability distribution and should sum to 1.
     Returns:
         out:  tf.Tensor with shape (1,) (Scalar output). You need to construct this
                     tensor in the problem.
     """
-
+    
     ### YOUR CODE HERE
+    log_yhat = tf.log(yhat)
+    product = tf.multiply(tf.to_float(y), log_yhat)
+    # 如果没有设置axis的值，那么reduce_sum 返回的是所有的和。
+    out = - tf.reduce_sum(product)
     ### END YOUR CODE
+    
 
     return out
 
